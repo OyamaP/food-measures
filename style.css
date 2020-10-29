@@ -1,0 +1,305 @@
+* {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+html {
+    margin: 0 auto;
+}
+
+body {
+    padding: 15px 5% 0 5%;
+}
+
+html, body {
+    background-color: #F0F0F0;
+    font-family: sans-serif;
+    height: 100vh;
+    min-width: 320px;
+    min-height: 320px;
+    max-width: 1366px;
+    max-height: 1366px;
+
+}
+
+h1 {
+    margin: 0 0 15px 0;
+    padding: 0 5%;
+    height: 40px;
+    border-bottom: 3px solid ;
+    color: #523a31;
+}
+
+#app {
+    height: calc(100% - 55px);
+    overflow: hidden;
+}
+
+.updown {
+    padding: 0 0 20px 0;
+    height: 50%;
+    transition: 500ms;
+}
+
+.heading {
+    position: relative;
+    margin: 0 auto 10px auto;
+    width: 90%;
+    height: 40px;
+    line-height: 40px;
+    font-size: 1.5rem;
+    font-weight :bold;
+    color: #6f4b3e;
+}
+
+.moveBtn {
+    display: none;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+    min-width: 90px;
+    max-width: 200px;
+    width: 30%;
+    height: 40px;
+    border: 2px solid #8f6552;
+    border-radius: 30px;
+    font-size: 1rem;
+    text-align: center;
+    background-color: #d6c6af;
+    cursor: pointer;
+}
+
+.wrap {
+    margin: 0 auto;
+    padding: 10px;
+    border: 3px dashed #bf794e;
+    border-radius: 15px;
+    height: calc(100% - 50px);
+}
+
+#seasoningsList {
+    display:flex;
+    flex-wrap:wrap;
+    align-items:flex-start;
+    align-content:flex-start;
+}
+
+#selectsList {
+    display: block;
+}
+
+.list {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    text-align: center;
+}
+
+
+
+/*リストパーツ*/
+
+.seasoning {
+    margin: 5px;
+    padding: 5px;
+    border: 2px solid #8f6552;
+    border-radius: 30px;
+    list-style-type: none;
+    line-height: 30px;
+    color: #6f4b3e;
+    cursor: pointer;
+}
+
+#seasoningsList::before {
+    order:998;
+}
+
+#seasoningsList::after {
+    order:999;
+}
+
+#seasoningsList::before,
+#seasoningsList::after{
+    content: "";
+    display: block;
+    margin: auto;
+}
+
+/*リスト4列(デフォルト)*/
+#seasoningsList .seasoning,
+#seasoningsList::before,
+#seasoningsList::after{
+    min-width: 200px;
+    width: 24%;
+}
+
+.name {
+    display: inline-block;
+    width: 186px;
+}
+
+.setValue {
+    width: 70px;
+}
+
+.setMeasure {
+    width: 90px;
+}
+
+.break {
+    display: none;
+}
+
+.result {
+    display: inline-block;
+    width: 70px;
+}
+
+.parts{
+    margin: 2px 0;
+    border: 1px solid;
+    border-radius: 5px;
+    height: 30px;
+    color: #6f4b3e;
+    font-size: 1.1rem;
+    text-align: center;
+}
+
+.deleteBtn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+    border: 1px solid;
+    border-radius: 30px;
+    width: 100px;
+    height: 30px;
+    text-align: center;
+    font-size: 1.1rem;
+    background-color: #d6c6af;
+}
+
+.deleteBtn::before , .deleteBtn::after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 25%;
+    height: 3px;
+    border-radius: 100%;
+    background-color: #6f4b3e;
+}
+
+.deleteBtn::before {
+    -webkit- transform: translateY(-50%) translateX(-50%) rotate(45deg);
+    transform: translateY(-50%) translateX(-50%) rotate(45deg);
+}
+
+.deleteBtn::after {
+    -webkit- transform: translateY(-50%) translateX(-50%) rotate(-45deg);
+    transform: translateY(-50%) translateX(-50%) rotate(-45deg);
+}
+
+
+
+/*状態系*/
+
+.dragging {
+    opacity: 0.5;
+}
+
+/*selectedリストへ移動した状態*/
+.selected {
+    position: relative;
+    background-color: transparent;
+    margin: 10px;
+    width: auto;
+    border: none;
+    border-bottom: 2px solid #8f6552;
+    border-radius: 0;
+    text-align: left;
+}
+.selected .name {
+    font-size: 1.2rem;
+}
+
+/*moveBtnでのtoggle=>フレーム移動*/
+.move {
+    transform: translateY(-100%);
+}
+
+
+
+/*レスポンシブ*/
+
+
+/*リストを3列にする*/
+
+@media screen and (max-width:1200px){
+    #seasoningsList .seasoning,
+    #seasoningsList::before,
+    #seasoningsList::after{
+        width: 32%;
+    }
+}
+
+/*リストを2列にする*/
+@media screen and (max-width:900px){
+    #seasoningsList .seasoning,
+    #seasoningsList::before,
+    #seasoningsList::after{
+        width: 48%;
+    }
+}
+
+/*selectListで名前改行する*/
+@media screen and (max-width:800px){
+    #selectsList .name {
+        display: block;
+    }
+}
+
+/*リストを1列にする*/
+@media screen and (max-width:640px){
+    #seasoningsList .seasoning {
+        margin: 5px auto;
+        width: 85%;
+    }
+}
+
+/*枠を一つのみ表示させてmoveBtnを表示する*/
+@media screen and (max-height:640px),
+screen and (max-width:640px){
+    .updown {
+        height: 100%;
+    }
+    .moveBtn {
+        display: block;
+    }
+}
+
+/*br改行を表示する*/
+@media screen and (max-width:580px){
+    .break {
+        display: block;
+    }
+}
+
+/*deleteBtnを上にずらし○ボタンに変更*/
+@media screen and (max-width:430px){
+    .deleteBtn {
+        width: 30px;
+        border-radius: 50%;
+        top: 18%;
+    }
+    .deleteBtn::before, .deleteBtn::after {
+        width: 85%;
+    }
+
+}
