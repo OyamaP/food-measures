@@ -76,7 +76,7 @@ const createOuter = (frame,title,id,btn) => {
     $outer.innerHTML = `
         <div class="heading">
             ${title}
-            <span class="moveBtn">${btn}</span>
+            <span class="moveBtn ${btn}"></span>
         </div>
         <div class="wrap">
             <ul id="${id}" class="list"></ul>
@@ -239,11 +239,20 @@ const deleteBtn = (e) => {
 }
 
 
-// click
+// click Event
 // 項目をselectへ移動する
+// 初回クリック時にmoveBtnにclassを付与
+// => 背景色を変更しボタンへの視線を誘導する
+let clickedSwitch = 1;
 const clicked = (e) => {
     $source = checkList(e.target);
     toSelects();
+    if(!clickedSwitch){return}
+    $btns = document.querySelectorAll('.moveBtn');
+    $btns.forEach(btn=>{
+        btn.classList.add('induction');
+    })
+    clickedSwitch--;
 }
 
 
@@ -347,8 +356,8 @@ const dragEnded = (e) => {
 
 // window onload
 window.onload = function(){
-    createOuter('up','Seasonings','seasoningsList','↓');
-    createOuter('down','Selects','selectsList','↑');
+    createOuter('up','Seasonings','seasoningsList','toBottom');
+    createOuter('down','Selects','selectsList','toTop');
     createLists('seasoningsList',data);
 }
 

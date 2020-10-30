@@ -67,8 +67,53 @@ h1 {
     border-radius: 30px;
     font-size: 1rem;
     text-align: center;
-    background-color: #d6c6af;
     cursor: pointer;
+    transition: 500ms;
+}
+
+/*selectUI*/
+.induction {
+    background-color: #d6c6af;
+}
+
+/*moveBtnの矢印を指定*/
+.moveBtn::before, .moveBtn::after {
+    content: "";
+    display: block;
+    position: absolute;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+
+.moveBtn::before {
+    width: 8px;
+    height: 15px;
+    background-color: #6f4b3e;
+}
+
+.moveBtn::after {
+    border: 10px solid transparent;
+}
+
+/*moveBtnの↓矢印を指定*/
+.toBottom::before {
+    top: 20%;
+}
+
+.toBottom::after {
+    top: 50%;
+    border-top-color: #6f4b3e;
+}
+
+/*moveBtnの↑矢印を指定*/
+.toTop::before {
+    bottom: 20%;
+}
+
+.toTop::after {
+    bottom: 50%;
+    border-bottom-color: #6f4b3e;
 }
 
 .wrap {
