@@ -32,7 +32,7 @@ const seasonings = [
 
     // その他
     ['牛乳',5,15,210],
-    ['ヨーグルト',5,15,210],    
+    ['ヨーグルト',5,15,210],
     ['片栗粉',3,9,130],
     ['パン粉',1,3,40],
     ['カレー粉',2,6,80],
@@ -61,15 +61,6 @@ let $source;
 const setEvent = (ele,events,boolean) => {
     for(let key in events){
         ele.addEventListener(key,events[key],boolean);
-    }
-}
-
-// toggleClass
-const toggleClass = (ele,className) => {
-    if(ele.classList.contains(className)){
-        ele.classList.remove(className);
-    }else{
-        ele.classList.add(className);
     }
 }
 
@@ -199,7 +190,7 @@ const toSelects = () => {
 const updown = (e) => {
     const $updowns = document.querySelectorAll('.updown');
     $updowns.forEach(ele=>{
-        toggleClass(ele,'move');
+        ele.classList.toggle('move');
     });
 }
 
@@ -290,8 +281,8 @@ const dropped = (e) => {
         if(/List$/.test(ele.id)){return ele.id}
         return $dropList.parentNode.id;
     }
-    
-    const $dropList = checkList(e.target);
+
+const $dropList = checkList(e.target);
     const dragAreaId = $source.parentNode.id;
     const dropAreaId = areaCheck(e.target);
 
@@ -340,7 +331,7 @@ const dropped = (e) => {
     }
     // 別エリアにドロップした場合は移動させる
     if(dragAreaId!==dropAreaId){
-        toggleClass($source,'selected');
+        $source.classList.toggle('selected');
         if($source.classList.contains('selected')){toSelects()}
         else{toSeasonings()}
         return;
