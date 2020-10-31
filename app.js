@@ -173,6 +173,7 @@ const toSelects = () => {
     const objs = data[$source.getAttribute('name')];
     const isTbsp = (i) => {
         if(i==='大さじ'){return 'selected="selected"'}
+        return "";
     }
     for(let i in objs){
         if(!objs[i]){continue}
