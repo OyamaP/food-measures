@@ -1,4 +1,6 @@
-// Define //
+/******************************
+* define
+******************************/
 
 // データ定義
 class SeasoningsData {
@@ -52,21 +54,9 @@ let $source;
 
 
 
-// Function //
-
-
-// オブジェクト=>イベントリスナ
-// 複数のイベントを同時設定する際に使用する
-// (ex) setEvent(element,{eventA:function1,eventB:function2},false);
-const setEvent = (ele,events,boolean) => {
-    for(let key in events){
-        ele.addEventListener(key,events[key],boolean);
-    }
-}
-
-
-// DOM //
-
+/******************************
+* dom
+******************************/
 
 // 枠組み生成
 const createOuter = (frame,title,id,btn) => {
@@ -184,8 +174,23 @@ const toSelects = () => {
 }
 
 
-// Event //
+/******************************
+* function
+******************************/
 
+// オブジェクト=>イベントリスナ
+// 複数のイベントを同時設定する際に使用する
+// (ex) setEvent(element,{eventA:function1,eventB:function2},false);
+const setEvent = (ele,events,boolean) => {
+    for(let key in events){
+        ele.addEventListener(key,events[key],boolean);
+    }
+}
+
+
+/******************************
+* event / btn input
+******************************/
 
 // clickイベント:上下移動用のトグルボタン
 const updown = (e) => {
@@ -215,12 +220,12 @@ const saveSelected = (e) => {
 }
 
 // saveValue or saveSelected イベントからの派生関数
-// 両項目ともに記入されていれば値を算出する
+// 両項目ともに記入されていれば計算結果を算出する
 const result = (e) => {
-    $source = e.target.parentNode;
+    $source = e.target.closest('.seasoning');
     const value = $source.querySelector('.setValue').value;
     const measure = $source.querySelector('.setMeasure').value;
-    if(!value || !measure){return}
+    if(!value || !measure) return;
     const name = $source.getAttribute('name');
     const $result = $source.querySelector('.result');
     // 記入数値 / data登録オブジェクトのselectされた計りの数値 を 四捨五入小数点第一位算出
@@ -234,38 +239,40 @@ const result = (e) => {
 // => toSeasonings() で 親要素にclickイベントを再付与し伝播するため
 const deleteBtn = (e) => {
     e.stopPropagation();
-    $source = e.target.parentNode;
+    $source = e.target.closest('.seasoning');
     toSeasonings();
     $source = '';
 }
-
 
 // click Event
 // 項目をselectへ移動する
 // 初回クリック時にmoveBtnにclassを付与
 // => 背景色を変更しボタンへの視線を誘導する
-let clickedSwitch = 1;
+let clickedSwitch = true;
 const clicked = (e) => {
     $source = checkList(e.target);
     toSelects();
-    if(!clickedSwitch){return}
+    if(!clickedSwitch) return;
     $btns = document.querySelectorAll('.moveBtn');
     $btns.forEach(btn=>{
         btn.classList.add('induction');
     })
-    clickedSwitch--;
+    clickedSwitch = false;
 }
 
 
-// ドラッグ系イベントのターゲットを正しく補正する
-// ※意図しない子要素をターゲットにしている場合に親要素に修正する
-// =>現状孫要素以降に対応していない
+/******************************
+* event / drag
+******************************/
+
+// ドラッグ系イベントのターゲット補正 -> エリア(ul)判定
+const areaCheck = (ele) => {
+    return ele.closest('.list');
+}
+// ドラッグ系イベントのターゲット補正 -> リスト(li)判定
 const checkList = (ele) => {
-    if(/List$/.test(ele.id)){return ele}
-    if(/^data/.test(ele.id)){return ele}
-    return ele.parentNode;
+    return ele.closest('.seasoning');
 }
-
 
 // ドラッグ開始
 const dragStarted = (e)  => {
@@ -285,34 +292,27 @@ const dropped = (e) => {
     e.preventDefault();
     e.stopPropagation();
 
-    // ドロップ先のエリアを判定する
-    // 強制的にエリアidに設定
-    const areaCheck = (ele) => {
-        if(/List$/.test(ele.id)){return ele.id}
-        return $dropList.parentNode.id;
-    }
+    const $dropList = checkList(e.target);
+    const dragAreaId = areaCheck($source).id;
+    const dropAreaId = areaCheck(e.target).id;
 
-const $dropList = checkList(e.target);
-    const dragAreaId = $source.parentNode.id;
-    const dropAreaId = areaCheck(e.target);
+    // 同一エリア && ドロップ先がリスト(true)
+    if(dragAreaId===dropAreaId && $dropList){
 
-    // dragData dropData を定義する
-    // exchange()で$sourceの参照に問題が出るため新規オブジェクト生成
-    class ExchangeData {
-        constructor(ele){
-            this.html = ele.innerHTML;
-            this.id = ele.id;
-            this.class = ele.classList;
-            this.style = ele.getAttribute('style');
-            this.name = ele.getAttribute('name');
-        };
-    }
-    const dragData = new ExchangeData($source);
-    const dropData = new ExchangeData($dropList);
+        // dragData dropData を定義する
+        // exchange()で$sourceの参照に問題が出るため新規オブジェクト生成
+        class ExchangeData {
+            constructor(ele){
+                this.html = ele.innerHTML;
+                this.id = ele.id;
+                this.class = ele.classList;
+                this.style = ele.getAttribute('style');
+                this.name = ele.getAttribute('name');
+            };
+        }
+        const dragData = new ExchangeData($source);
+        const dropData = new ExchangeData($dropList);
 
-
-// 同一エリア && ドロップ先idがdataなら要素の入れ替えを行う
-    if(dragAreaId===dropAreaId && /^data/.test(dropData.id)){
         // 要素とデータを元に代入する
        const exchange = (ele,tmp) => {
             ele.innerHTML = tmp.html;
@@ -355,7 +355,10 @@ const dragEnded = (e) => {
 }
 
 
-// window onload
+/******************************
+* run
+******************************/
+
 window.onload = function(){
     createOuter('up','Seasonings','seasoningsList','toBottom');
     createOuter('down','Selects','selectsList','toTop');
